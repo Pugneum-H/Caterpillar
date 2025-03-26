@@ -1,7 +1,8 @@
 import re
-import importlib
 import logging
-import sys
+from os import path
+from urllib.parse import urlparse
+import requests
 
 
 
@@ -21,7 +22,7 @@ class Caterpillar:
             logging.basicConfig(
                 level=logging.INFO,  
                 format='%(asctime)s - %(message)s',  
-                handlers=[logging.StreamHandler()] 
+                handlers=[logging.StreamHandler()].extend(self.settings.get('handlers', []))
             )
     
         self.patterns = [    
@@ -87,7 +88,7 @@ class Caterpillar:
             logging.basicConfig(
                 level=logging.INFO,  
                 format='%(asctime)s - %(message)s',  
-                handlers=[logging.StreamHandler()] 
+                handlers=[logging.StreamHandler()].extend(self.settings.get('handlers', []))
             )
     
         # PARSING       
@@ -155,18 +156,29 @@ class Caterpillar:
             idx += 1
         logging.info("inserted as-is elements")
 
+        # PARSING NEWLINES
+
         text = text.replace("\n", "<br>\n")
         text = text.replace("<br>\n<br>\n", "<br>\n")
         logging.info("parsed newlines")
+
+        # EXECUTING PLUGINS
         
         for plugin in self.plugins:
             try:
-                spec = importlib.util.spec_from_file_location(str(plugin), str(plugin))
-                plug = importlib.util.module_from_spec(spec)
-                plug = importlib.import_module(str(plugin))
-                sys.modules["plug"] = plug
-                spec.loader.exec_module(plug)
-                text, self.settings, self.plugins = plug.main(text, self.settings, self.plugins, self.patterns, self.capture_patterns)
+                if path.isfile(str(plugin)):
+                    plug = open(str(plugin), "r", encoding=self.settings.get("encoding", "utf-8")).read()
+                elif bool(urlparse(plugin).netloc) == True:
+                    plug = requests.get(str(plugin), headers={'Cache-Control': 'no-cache','Pragma': 'no-cache'})
+                    if plug.status_code == 200:
+                        plug = plug.text
+                else:
+                    plug = plugin
+                local_vars = {}
+                exec(plug, globals(), local_vars)
+                if "main" in local_vars:
+                    text, self = local_vars["main"](text, self)
+    
                 logging.info("plugin '" + str(plugin) + "' executed")
             except:
                 logging.info("plugin '" + str(plugin) + "' failed to execute")
@@ -177,5 +189,4 @@ class Caterpillar:
         
 
     
-
 
