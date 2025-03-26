@@ -39,7 +39,7 @@ class Caterpillar:
             r'\!\((.*?)\)\[(.*?)\]',                # link                  !   
             r'\!\[(.*?)\]\[(.*?)\]\[(.*?):(.*?)\]', # picture               !   
             r'^\+\s(.*?)$',                         # list (unordered)          
-            r'\|\!\|(.*?)\|\!\|'                    # leave as-is (block)   !   
+            r'\[\!\](.*?)\[\!\]'                    # leave as-is (block)   !   
         ]
 
         self.capture_patterns = [                                  
@@ -55,7 +55,7 @@ class Caterpillar:
             r'\!\(.*?\)\[.*?\]',                
             r'\!\[.*?\]\[.*?\]\[.*?:.*?\]', 
             r'^\+\s.*?$',                         
-            r'\|\!\|.*?\|\!\|'                      
+            r'\[\!\].*?\[\!\]'                      
         ]
         # plugins removal
     def addPlugins(self, *plugins):
@@ -107,7 +107,7 @@ class Caterpillar:
         as_is_elements.extend(re.findall(self.patterns[10], text))
         text = re.sub(self.capture_patterns[10], "![text][text][text:text]", text, 0)
         as_is_elements.extend(re.findall(self.patterns[12], text, re.DOTALL))
-        text = re.sub(self.capture_patterns[12], "|!|text|!|", text, 0, re.DOTALL)
+        text = re.sub(self.capture_patterns[12], "[!]text[!]", text, 0, re.DOTALL)
 
         logging.info("removed as-is elements")
 
