@@ -92,7 +92,7 @@ class Caterpillar:
             )
     
         # PARSING       
-    def parse(self, text_):
+    def parseText(self, text_):
         text = text_
         logging.info("started parsing")
 
