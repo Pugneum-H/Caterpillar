@@ -92,9 +92,70 @@ class Caterpillar:
             )
     
         # PARSING       
-    def parseText(self, text_):
+    def parseText(self, text_ : str):
+
         text = text_
+        ########################### plugin exec at pos (todo : make a func)
+        # for plugin in exec_pos_0:                         
+        #     try:
+        #         if path.isfile(str(plugin[0])):
+        #             plug = open(str(plugin[0]), "r", encoding=self.settings.get("encoding", "utf-8")).read()
+        #         elif bool(urlparse(plugin).netloc) == True:
+        #             plug = requests.get(str(plugin[0]), headers={'Cache-Control': 'no-cache','Pragma': 'no-cache'})
+        #             if plug.status_code == 200:
+        #                 plug = plug.text
+        #         else:
+        #             plug = (plugin[0])
+        #         local_vars = {}
+        #         exec(plug, globals(), local_vars)
+        #         plugin.pop(0)
+        #         plugin.pop(0)
+        #         if "main" in local_vars:
+        #             text, self = local_vars["main"](text, self, plugin)
+    
+        #         logging.info("plugin '" + str(plugin[0]) + "' executed")
+        #     except:
+        #         logging.info("plugin '" + str(plugin[0]) + "' failed to execute")
+
+        exec_pos_0 = []
+        exec_pos_1 = []
+        exec_pos_2 = []
+        exec_pos_3 = []
+        exec_pos_4 = []
         logging.info("started parsing")
+
+        for plugin in self.plugins:
+            if plugin[1] == 0:
+                exec_pos_0.append(plugin)
+            elif plugin[1] == 1:
+                exec_pos_1.append(plugin)
+            elif plugin[1] == 2:
+                exec_pos_2.append(plugin)
+            elif plugin[1] == 3:
+                exec_pos_3.append(plugin)
+            elif plugin[1] == 4:
+                exec_pos_4.append(plugin)
+
+    
+        for plugin in exec_pos_0:                         
+            try:
+                if path.isfile(str(plugin[0])):
+                    plug = open(str(plugin[0]), "r", encoding=self.settings.get("encoding", "utf-8")).read()
+                elif bool(urlparse(plugin).netloc) == True:
+                    plug = requests.get(str(plugin[0]), headers={'Cache-Control': 'no-cache','Pragma': 'no-cache'})
+                    if plug.status_code == 200:
+                        plug = plug.text
+                else:
+                    plug = (plugin[0])
+                local_vars = {}
+                exec(plug, globals(), local_vars)
+                if "main" in local_vars:
+                    text, self = local_vars["main"](text, self, plugin)
+    
+                logging.info("plugin '" + str(plugin[0]) + "' executed")
+            except:
+                logging.info("plugin '" + str(plugin[0]) + "' failed to execute")
+
 
         # WORKING WITH THOSE WITH "!" ("I" column) - left as-is no other regex parsing
         as_is_elements = []
@@ -111,6 +172,25 @@ class Caterpillar:
 
         logging.info("removed as-is elements")
 
+        for plugin in exec_pos_1:                         
+            try:
+                if path.isfile(str(plugin[0])):
+                    plug = open(str(plugin[0]), "r", encoding=self.settings.get("encoding", "utf-8")).read()
+                elif bool(urlparse(plugin).netloc) == True:
+                    plug = requests.get(str(plugin[0]), headers={'Cache-Control': 'no-cache','Pragma': 'no-cache'})
+                    if plug.status_code == 200:
+                        plug = plug.text
+                else:
+                    plug = (plugin[0])
+                local_vars = {}
+                exec(plug, globals(), local_vars)
+                if "main" in local_vars:
+                    text, self = local_vars["main"](text, self, plugin)
+    
+                logging.info("plugin '" + str(plugin[0]) + "' executed")
+            except:
+                logging.info("plugin '" + str(plugin[0]) + "' failed to execute")
+
         # TEXT MODIFIERS
         text = re.sub(self.patterns[3], r'<b>\1</b>', text, 0, re.DOTALL)
         text = re.sub(self.patterns[4], r'<i>\1</i>', text, 0, re.DOTALL)
@@ -119,6 +199,25 @@ class Caterpillar:
         text = re.sub(self.patterns[7], r'<mark>\1</mark>', text, 0, re.DOTALL)
         
         logging.info("parsed text modifiers")
+
+        for plugin in exec_pos_2:                         
+            try:
+                if path.isfile(str(plugin[0])):
+                    plug = open(str(plugin[0]), "r", encoding=self.settings.get("encoding", "utf-8")).read()
+                elif bool(urlparse(plugin).netloc) == True:
+                    plug = requests.get(str(plugin[0]), headers={'Cache-Control': 'no-cache','Pragma': 'no-cache'})
+                    if plug.status_code == 200:
+                        plug = plug.text
+                else:
+                    plug = (plugin[0])
+                local_vars = {}
+                exec(plug, globals(), local_vars)
+                if "main" in local_vars:
+                    text, self = local_vars["main"](text, self, plugin)
+    
+                logging.info("plugin '" + str(plugin[0]) + "' executed")
+            except:
+                logging.info("plugin '" + str(plugin[0]) + "' failed to execute")
 
         # HEADINGS
         text = re.sub(self.patterns[0], r'<h\1>\2</h\1>', text, 0, re.MULTILINE)
@@ -131,6 +230,25 @@ class Caterpillar:
         # UNORDERED LIST
         text = re.sub(self.patterns[11], r'<li>\1</li>', text, 0, re.MULTILINE)
         logging.info("parsed lists")
+
+        for plugin in exec_pos_3:                         
+            try:
+                if path.isfile(str(plugin[0])):
+                    plug = open(str(plugin[0]), "r", encoding=self.settings.get("encoding", "utf-8")).read()
+                elif bool(urlparse(plugin).netloc) == True:
+                    plug = requests.get(str(plugin[0]), headers={'Cache-Control': 'no-cache','Pragma': 'no-cache'})
+                    if plug.status_code == 200:
+                        plug = plug.text
+                else:
+                    plug = (plugin[0])
+                local_vars = {}
+                exec(plug, globals(), local_vars)
+                if "main" in local_vars:
+                    text, self = local_vars["main"](text, self, plugin)
+    
+                logging.info("plugin '" + str(plugin[0]) + "' executed")
+            except:
+                logging.info("plugin '" + str(plugin[0]) + "' failed to execute")
 
         # REINSERTING AS-IS ELEMENTS
         idx = 0
@@ -162,26 +280,26 @@ class Caterpillar:
         text = text.replace("<br>\n<br>\n", "<br>\n")
         logging.info("parsed newlines")
 
-        # EXECUTING PLUGINS
-        
-        for plugin in self.plugins:
+        for plugin in exec_pos_4:                         
             try:
-                if path.isfile(str(plugin)):
-                    plug = open(str(plugin), "r", encoding=self.settings.get("encoding", "utf-8")).read()
+                if path.isfile(str(plugin[0])):
+                    plug = open(str(plugin[0]), "r", encoding=self.settings.get("encoding", "utf-8")).read()
                 elif bool(urlparse(plugin).netloc) == True:
-                    plug = requests.get(str(plugin), headers={'Cache-Control': 'no-cache','Pragma': 'no-cache'})
+                    plug = requests.get(str(plugin[0]), headers={'Cache-Control': 'no-cache','Pragma': 'no-cache'})
                     if plug.status_code == 200:
                         plug = plug.text
                 else:
-                    plug = plugin
+                    plug = (plugin[0])
                 local_vars = {}
                 exec(plug, globals(), local_vars)
                 if "main" in local_vars:
-                    text, self = local_vars["main"](text, self)
+                    text, self = local_vars["main"](text, self, plugin[2:])
     
-                logging.info("plugin '" + str(plugin) + "' executed")
+                logging.info("plugin '" + str(plugin[0]) + "' executed")
             except:
-                logging.info("plugin '" + str(plugin) + "' failed to execute")
+                logging.info("plugin '" + str(plugin[0]) + "' failed to execute")
+        
+        
         
         logging.info("finished parsing")
         return text
@@ -189,4 +307,3 @@ class Caterpillar:
         
 
     
-
