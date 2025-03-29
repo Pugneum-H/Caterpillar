@@ -12,7 +12,7 @@
 	- `silenced` - *disable/enable logging*
 	- `encoding` - *encoding for plugins*
 	- `handlers` - *handlers for logging*
-	- `*plugins` - any path/URL to the file | python code* & plugins
+	- `*plugins` - any path/URL to the file | python code* & parameters
 3. **plugins**:
 	- To add: `addPlugins(self, *plugins)`
 	- To remove : `removePlugins(self, *plugins)`
